@@ -1,5 +1,5 @@
-exports.getBootCamps = (req,res,next)=>{
-    console.log(req.hello)
+exports.getBootCamps =async (req,res,next)=>{
+
     next()
 }
 exports.getBootCamp=(req,res,next)=>{
