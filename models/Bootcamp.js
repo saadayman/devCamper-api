@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify')
-const geocoder = require('../utils/geocoder')
+const geocoder = require('../utils/geocoder');
+const Course = require('./Course');
 const BootcampSchema  = new mongoose.Schema({
     name:{
         type:String,
@@ -101,6 +102,13 @@ const BootcampSchema  = new mongoose.Schema({
 
     
 
+},{
+  toJSON:{
+    virtuals:true
+  },
+  toObject:{
+    virtuals:true
+  }
 }) 
 BootcampSchema.pre('save',function beforeSave(next){
    this.slug = slugify(this.name,{lower:true,trim:true})
@@ -119,8 +127,21 @@ BootcampSchema.pre('save',async function(next){
       country: loc[0].country||null
     }
  this.address = undefined
-  console.log(loc)
+  
   next()
+})
+
+BootcampSchema.pre('remove',async function(next){
+  await this.model('Course').deleteMany({bootcamp: this._id})
+  next()
+})
+
+//REVERSE POPULATE
+BootcampSchema.virtual('Courses',{
+  ref:'Course',
+  localField:'_id',
+  foreignField:'bootcamp',
+  justOne:false
 })
 module.exports = mongoose.model('Bootcamp',BootcampSchema)
 

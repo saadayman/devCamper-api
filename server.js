@@ -2,6 +2,7 @@ const express = require('express')
 const connectDB=require('./config/db')
 const dotenv = require('dotenv')
 const bootcamps = require('./routes/bootcamps.js')
+const courses  = require('./routes/courses.js')
 const {logger}= require('./middleware/logger')
 const morgan = require('morgan')
 const  colors =require('colors')
@@ -17,6 +18,7 @@ app.use(morgan('tiny'))
 connectDB();
 //mount routes 
 app.use('/api/v1/bootcamps',bootcamps)
+app.use('/api/v1/courses',courses)
 app.use(errorHandler)
 const PORT = process.env.PORT || 5000
 
