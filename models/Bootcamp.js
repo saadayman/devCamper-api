@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const slugify = require('slugify')
 const geocoder = require('../utils/geocoder');
 const Course = require('./Course');
+const fileUpload = require('express-fileupload')
 const BootcampSchema  = new mongoose.Schema({
     name:{
         type:String,
