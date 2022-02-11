@@ -7,13 +7,16 @@ const {
     updateCourse,
     deleteCourse
 } = require('../controllers/courses')
+const { protect } = require('../middleware/auth')
 const advancedResult = require('../middleware/advancedResult')
 const Course = require('../models/Course')
 router.route('/').get(advancedResult(Course,{
     path:'bootcamp',
     select:'name description'
-}),getCourses).post(createCourse)
-router.route('/:id').get(getSingleCourse).put(updateCourse).delete(deleteCourse)
+}),getCourses).post(protect,createCourse)
+router.route('/:id').get(getSingleCourse)
+.put(protect,updateCourse)
+.delete(protect,deleteCourse)
 
 
 
