@@ -39,8 +39,24 @@ exports.getBootcampsInRadius = asyncHandler(async (req,res,next)=>{
     
 })
 exports.createBootCamps=asyncHandler(async (req,res,next)=>{
+        req.body.user = req.user._id
+
+        //Check for publishedd 
+
+    const publishedBootcamp = await Bootcamp.findOne({user:req.user.id})
+//we need to check if he already has a bootcamp 
+//check if user is admin or not
+if(req.user.role!=='admin' && publishedBootcamp){
     
+    return next(new ErrorResponse(`user with role : ${req.user.role} has already created a bootcamp , and you cant create more than one bootcamp`))
+    
+}
+   
         const bootcamp =  await Bootcamp.create(req.body)
+
+
+
+
         res.status(201).json({sucess:true,data:req.body,})
    
 
@@ -48,10 +64,16 @@ exports.createBootCamps=asyncHandler(async (req,res,next)=>{
 })
 exports.deleteBootCamps=asyncHandler(async(req,res,next)=>{
    
-   const bootcamp =  await Bootcamp.findById(req.params.id)
+   let bootcamp =  await Bootcamp.findById(req.params.id)
    if(!bootcamp){
     return   next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`,404))
    }
+   const owner = bootcamp.user.toString()
+  
+
+if(owner !== req.user.id && req.user.role !=="admin"){
+     return next(new ErrorResponse(`User with id :${req.user.id} is not the creater of this bootcamp and cannot commit this action`))
+}
    bootcamp.remove()//in order to trigger a the middle ware
     res.status(200).json({sucess:true, MSG:'item removed'})
    
@@ -59,12 +81,22 @@ exports.deleteBootCamps=asyncHandler(async(req,res,next)=>{
 })
 exports.updateBootCamps=asyncHandler(async(req,res,next)=>{
 
- const bootcamp =    await Bootcamp.findByIdAndUpdate(req.params.id,req.body,{ 
-     new:true
- })
+let bootcamp =    await Bootcamp.findById(req.params.id)
+ console.log(bootcamp)
  if(!bootcamp){
     return   next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`,404))
  }   
+ const owner = bootcamp.user.toString()
+  
+
+if(owner !== req.user.id && req.user.role !=="admin"){
+     return next(new ErrorResponse(`User with id :${req.user.id} is not the creater of this bootcamp and cannot commit this action`))
+}
+bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id,req.body,{ 
+    new:true,
+    runValidators:true
+})
+
  res.json({sucess:true,data:bootcamp})
 })
 
@@ -74,6 +106,12 @@ exports.BootcampPhotoUpload=asyncHandler(async(req,res,next)=>{
     if(!bootcamp){
      return   next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`,404))
     }
+    const owner = bootcamp.user.toString()
+  
+ console.log(owner,"here")
+if(owner !== req.user.id && req.user.role !=="admin"){
+     return next(new ErrorResponse(`User with id :${req.user.id} is not the creater of this bootcamp and cannot commit this action`))
+}
    if(!req.files){
     return   next(new ErrorResponse(`no file was uploaded`,400))
    }
