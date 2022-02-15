@@ -63,7 +63,7 @@ exports.updateCourse= asyncHandler(async (req,res,next)=>{
        if(owner !== req.user.id && req.user.role !=="admin"){
             return next(new ErrorResponse(`User with id :${req.user.id} is not the creater of this bootcamp and cannot commit this action`),401)
        }
-      course = await Course.findByIdAndUpdate( req.body,{new:true,runValidators:true})
+      course = await Course.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true})
     res.status(200).json({sucess:true,course})
 })
 exports.deleteCourse = asyncHandler(async(req,res,next)=>{

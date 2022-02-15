@@ -70,7 +70,7 @@ const BootcampSchema  = new mongoose.Schema({
           'Other'
         ]
       },
-      averageRating: {
+      averageRate: {
         type: Number,
         min: [1, 'Rating must be at least 1'],
         max: [10, 'Rating must can not be more than 10']
@@ -139,6 +139,7 @@ BootcampSchema.pre('save',async function(next){
 
 BootcampSchema.pre('remove',async function(next){
   await this.model('Course').deleteMany({bootcamp: this._id})
+  await this.model('Review').deleteMany({bootcamp:this._id})
   next()
 })
 

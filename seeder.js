@@ -7,6 +7,7 @@ dotenv.config({path:'./config/config.env'})
 const Bootcamp = require('./models/Bootcamp')
 const Course = require('./models/Course')
 const User= require('./models/User')
+const Review = require('./models/Review')
 //connecet to the db    
 const connectDB =async ()=>{
     let con = await mongoose.connect(process.env.URI,{useNewUrlParser:true})
@@ -15,6 +16,8 @@ connectDB()
 const bootcamps =JSON.parse(fs.readFileSync(`./devcamper_project_resources/_data/bootcamps.json`,'utf-8'))
 const courses =JSON.parse(fs.readFileSync(`./devcamper_project_resources/_data/courses.json`,'utf-8'))
 const users =JSON.parse(fs.readFileSync(`./devcamper_project_resources/_data/users.json`,'utf-8'))
+const reviews =JSON.parse(fs.readFileSync(`./devcamper_project_resources/_data/reviews.json`,'utf-8'))
+
 if(process.argv[2]==='i'){
 
     importData()
@@ -30,6 +33,7 @@ async function  importData(){
      await Bootcamp.create(bootcamps)
     await Course.create(courses)
     await User.create(users)
+    await Review.create(reviews)
      console.log('database filled'.green.inverse)
      process.exit(1)
     }
@@ -46,6 +50,7 @@ async function deleteData(){
     await Bootcamp.deleteMany()
    await Course.deleteMany()
    await User.deleteMany()
+   await Review.deleteMany()
     console.log('database empty'.bgRed)
     process.exit(1)
    }
