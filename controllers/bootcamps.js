@@ -65,9 +65,9 @@ if(req.user.role!=='admin' && publishedBootcamp){
 exports.deleteBootCamps=asyncHandler(async(req,res,next)=>{
    
    let bootcamp =  await Bootcamp.findById(req.params.id)
-   if(!bootcamp){
-    return   next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`,404))
-   }
+  if(!bootcamp){
+    return next(new ErrorResponse(`there is not bootcamp with such id`),400)
+  }
    const owner = bootcamp.user.toString()
   
 
@@ -75,7 +75,7 @@ if(owner !== req.user.id && req.user.role !=="admin"){
      return next(new ErrorResponse(`User with id :${req.user.id} is not the creater of this bootcamp and cannot commit this action`))
 }
    bootcamp.remove()//in order to trigger a the middle ware
-    res.status(200).json({sucess:true, MSG:'item removed'})
+    res.status(200).json({sucess:true, MSG:'Bootcamp removed'})
    
     
 })

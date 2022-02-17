@@ -35,7 +35,16 @@ app.use(fileUpload())
 //sanittize data
 app.use(MongoSanitize())
 //set security headres
-app.use(helmet())
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+     defaultSrc: ["'self'"],
+     styleSrc: ["'self'","'unsafe-inline'" ,'unpkg.com', 'cdn.jsdelivr.net', 
+     'fonts.googleapis.com', 'use.fontawesome.com'],
+     scriptSrc: ["'self'","'unsafe-inline'",'js.stripe.com'],
+     frameSrc: ["'self'",'js.stripe.com'],
+     fontSrc:["'self'",'fonts.googleapis.com','fonts.gstatic.com','use.fontawesome.com','cdn. joinhoney.com']
+   }
+  }));
 //prevent XSS attacks
 app.use(xss_clean())
 //allow cors 

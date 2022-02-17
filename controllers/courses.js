@@ -15,7 +15,7 @@ exports.getCourses = asyncHandler(async (req,res,next)=>{
         
   
 
-    res.status(200).json({sucess:true,count:courses.length,courses})
+  
     
 
 })
@@ -25,7 +25,7 @@ exports.getSingleCourse= asyncHandler(async (req,res,next)=>{
         select:'name description'
     })
     if(!course){
-        return next(new ErrorResponse(`Resource not found with id ${req.params.id}`) ,400)
+        return next(new ErrorResponse(`Resource not found with id ${req.params.id}`,400) )
     }
     res.status(200).json({sucess:true,course})
 })
@@ -36,7 +36,7 @@ exports.createCourse = asyncHandler(async (req,res,next)=>{
     req.body.user = req.user.id
     const bootcamp = await Bootcamp.findById(req.body.bootcamp)
     if(!bootcamp){
-        return next(new ErrorResponse('You cant create course without Bootcamp being existed maker sure bootcamp id is correct'),400)
+        return next(new ErrorResponse('You cant create course without Bootcamp being existed or make sure bootcamp id is correct'),400)
     }
     const owner = bootcamp.user.toString()
   

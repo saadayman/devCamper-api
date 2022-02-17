@@ -137,7 +137,7 @@ exports.logOut= asyncHandler(async(req,res,next)=>{
         user.resetPasswordToken=undefined
         user.resetPasswordExpire=undefined
         await user.save({validateBeforeSave:false})
-        next(new ErrorResponse('Email could not be send',500))
+        next(new ErrorResponse('Email could not be sent',500))
     }
    
 })

@@ -32,19 +32,21 @@ const UserSchema  = new mongoose.Schema({
     }
 })
 UserSchema.pre('save',async function(next){
+   
     if(!this.isModified('password')){
-        next();
+        next()
     }
-    const salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password,salt)
+    const salt =await bcrypt.genSalt(10)
 
-
+     this.password = await bcrypt.hash(this.password,salt)   
+    
+    
 })
 
 //Sign Jwt adn return 
 UserSchema.methods.getSignedJwtToken = function(){
 return  jwt.sign({id:this._id},process.env.SECRET_VALUE,{
-    expiresIn:`${process.env.JWT_EXPIRE}`
+    expiresIn:`${process.env.JWT_EXPIRE}`//30D 
 })
 
 
@@ -57,7 +59,7 @@ const resetToken = crypto.randomBytes(20).toString('hex')//since it return a buf
 
 //has the token and set to field in model
 this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex')
-
+console.log(this.resetPasswordToken)
 //set expire 
 this.resetPasswordExpire = Date.now()+10*60*1000
 return resetToken

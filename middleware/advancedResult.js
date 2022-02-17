@@ -20,7 +20,7 @@ const advancedResult = (model,populate)=>async (req,res,next)=>{
         let fields = req.query.select
      
      fields = fields.replace(/\b(,)\b/g,' ')
-      query = query.select(fields)//('name )
+      query = query.select(fields)//('name description')
  
     }
     if(req.query.sortBy){

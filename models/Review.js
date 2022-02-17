@@ -59,6 +59,7 @@ ReviewSchema.statics.getAverageRate =  async function(bootcampId){
     }
     ReviewSchema.post('save',async function(next){
         this.constructor.getAverageRate(this.bootcamp)
+        console.log(this)
       
       })
       ReviewSchema.pre('remove',async function(next){
